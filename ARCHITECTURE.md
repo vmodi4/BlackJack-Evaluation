@@ -1,7 +1,9 @@
 # BlackJack Learning Platform - Architecture Document
 
 ## Project Overview
+
 A web-based BlackJack learning platform for beginners that provides:
+
 - Fully functional BlackJack gameplay
 - Basic strategy recommendations
 - Running count display (card counting)
@@ -13,44 +15,55 @@ A web-based BlackJack learning platform for beginners that provides:
 ## Tech Stack
 
 ### Frontend
+
 **Framework:** React + TypeScript
+
 - **Why:** Component-based, great for interactive UI, type safety
 - **State Management:** Zustand or Redux Toolkit (for game state, card counting)
-- **UI Library:** 
+- **UI Library:**
   - Tailwind CSS (styling)
   - Framer Motion (card animations)
   - shadcn/ui (pre-built components)
-- **Visualization:** 
+- **Visualization:**
   - Canvas API or Three.js for card animations
   - Chart.js for statistics/analytics
 
 **Alternative:** Svelte/SvelteKit (lighter, faster, easier learning curve)
 
 ### Backend
+
 **Framework:** FastAPI (Python)
+
 - **Why:** Fast, async, automatic API docs, perfect for ML integration
 - **API Design:** RESTful + WebSocket for real-time updates
 - **Authentication:** JWT tokens (if you add user accounts later)
 
 **Alternative Options:**
+
 - Flask (simpler, but less modern)
 - Node.js/Express (if you want JS throughout)
 - Django (if you need admin panel/ORM)
 
 ### Database
+
 **Option 1:** PostgreSQL
+
 - Store user profiles, game history, statistics
 - Learning progress tracking
 
 **Option 2:** SQLite (for MVP)
+
 - Simpler setup, good for starting out
 
 **Option 3:** Firebase/Supabase
+
 - Managed backend, auth built-in, real-time features
 - Faster to market
 
 ### AI/ML Components
+
 **For Strategy & Hints:**
+
 - Rule-based system (basic strategy chart)
 - OpenAI API (for natural language hints/explanations)
 - Local ML model (if you want offline AI suggestions)
@@ -58,22 +71,26 @@ A web-based BlackJack learning platform for beginners that provides:
 ### Hosting
 
 **Frontend:**
+
 - Vercel (best for React/Next.js, free tier)
 - Netlify (alternative, also great)
 - Cloudflare Pages (fast CDN)
 
 **Backend:**
+
 - Railway (easy Python deployment, generous free tier)
 - Render (free tier, auto-deploys from GitHub)
 - Fly.io (edge deployment, fast)
 - AWS/GCP/Azure (more complex, scalable)
 
 **Database:**
+
 - Render/Railway (includes database)
 - Supabase (free PostgreSQL)
 - PlanetScale (MySQL, generous free tier)
 
 **Full Stack Option:**
+
 - Vercel (frontend) + Vercel Serverless Functions (backend)
 - Next.js full-stack app
 
@@ -208,12 +225,14 @@ blackjack-learning-platform/
 ### 1. Game Engine Module
 
 **Responsibilities:**
+
 - Deck management (shuffle, deal, reshuffle)
 - Hand calculations (total, soft/hard, blackjack detection)
 - Game flow (player turn, dealer turn, resolution)
 - Rule enforcement (dealer stands on 17, split rules, etc.)
 
 **Key Classes:**
+
 ```python
 class Card:
     - suit: str
@@ -247,17 +266,19 @@ class GameState:
 ### 2. Strategy Module
 
 **Basic Strategy Engine:**
+
 - Matrix-based decision lookup
 - Input: Player total, Dealer up card, hand type (hard/soft/pair)
 - Output: Recommended action (Hit, Stand, Double, Split)
 
 **Implementation:**
+
 ```python
 class BasicStrategy:
     - hard_totals_matrix: Dict
     - soft_totals_matrix: Dict
     - pairs_matrix: Dict
-    
+
     def get_recommendation(
         player_total: int,
         dealer_upcard: int,
@@ -267,6 +288,7 @@ class BasicStrategy:
 ```
 
 **Strategy Charts:**
+
 - Hard totals (5-20 vs dealer 2-A)
 - Soft totals (A,2 through A,9 vs dealer 2-A)
 - Pairs (2,2 through A,A vs dealer 2-A)
@@ -274,6 +296,7 @@ class BasicStrategy:
 ### 3. Card Counting Module
 
 **Systems to Implement:**
+
 1. **Hi-Lo (start here)**
    - Low cards (2-6): +1
    - Neutral (7-9): 0
@@ -284,13 +307,14 @@ class BasicStrategy:
 4. **Betting Strategy:** Adjust based on true count
 
 **Implementation:**
+
 ```python
 class CardCounter:
     - system: CountingSystem  # Hi-Lo, KO, etc.
     - running_count: int
     - cards_seen: int
     - decks_in_shoe: int
-    
+
     def update(card: Card) -> None
     def get_running_count() -> int
     def get_true_count() -> float
@@ -300,6 +324,7 @@ class CardCounter:
 ### 4. AI Assistant Module
 
 **Features:**
+
 - Natural language explanations for strategy decisions
 - Context-aware hints
 - Mistake analysis
@@ -308,15 +333,17 @@ class CardCounter:
 **Implementation Options:**
 
 **Option A: Rule-Based (Free)**
+
 ```python
 class AIAssistant:
     def explain_decision(game_state, recommended_action):
         # Template-based explanations
-        # "You should Hit because your total is 12 and 
+        # "You should Hit because your total is 12 and
         #  the dealer shows a 7, which is a strong card..."
 ```
 
 **Option B: OpenAI Integration (Better UX)**
+
 ```python
 class AIAssistant:
     def get_hint(game_state) -> str:
@@ -334,6 +361,7 @@ class AIAssistant:
 ### 5. Statistics & Analytics Module
 
 **Track:**
+
 - Win/Loss ratio
 - Hands played
 - Strategy accuracy (% correct decisions)
@@ -390,6 +418,7 @@ GET    /api/stats/history         # Historical stats
 ## Data Models
 
 ### Game State
+
 ```typescript
 interface GameState {
   id: string;
@@ -400,7 +429,7 @@ interface GameState {
     decksUsed: int;
   };
   currentBet: number;
-  stage: 'betting' | 'dealing' | 'player_turn' | 'dealer_turn' | 'complete';
+  stage: "betting" | "dealing" | "player_turn" | "dealer_turn" | "complete";
   availableActions: Action[];
   runningCount: number;
   trueCount: number;
@@ -413,12 +442,12 @@ interface Hand {
   isBlackjack: boolean;
   canSplit: boolean;
   canDouble: boolean;
-  result?: 'win' | 'loss' | 'push';
+  result?: "win" | "loss" | "push";
 }
 
 interface Card {
-  rank: string;  // '2'-'10', 'J', 'Q', 'K', 'A'
-  suit: string;  // '♠', '♥', '♦', '♣'
+  rank: string; // '2'-'10', 'J', 'Q', 'K', 'A'
+  suit: string; // '♠', '♥', '♦', '♣'
   value: number | number[];
 }
 ```
@@ -428,21 +457,21 @@ interface Card {
 ## Development Phases
 
 ### Phase 1: MVP (2-3 weeks)
+
 **Goal:** Basic playable BlackJack
 
 - [ ] Backend: Core game engine
   - Deck, Card, Hand classes
   - Basic game flow
   - API endpoints for game actions
-  
 - [ ] Frontend: Basic UI
   - Card display
   - Action buttons (Hit, Stand)
   - Simple animations
-  
 - [ ] Basic strategy lookup (no UI yet)
 
 ### Phase 2: Strategy Advisor (1-2 weeks)
+
 **Goal:** Add basic strategy recommendations
 
 - [ ] Implement strategy matrices
@@ -452,6 +481,7 @@ interface Card {
 - [ ] Strategy accuracy tracking
 
 ### Phase 3: Card Counting (1-2 weeks)
+
 **Goal:** Running count display
 
 - [ ] Hi-Lo counting implementation
@@ -461,6 +491,7 @@ interface Card {
 - [ ] Betting recommendations
 
 ### Phase 4: AI Assistant (1-2 weeks)
+
 **Goal:** Natural language help
 
 - [ ] AI explanation engine (rule-based or API)
@@ -469,6 +500,7 @@ interface Card {
 - [ ] Learning path suggestions
 
 ### Phase 5: Polish & Analytics (1-2 weeks)
+
 **Goal:** Production ready
 
 - [ ] User accounts & authentication
@@ -479,6 +511,7 @@ interface Card {
 - [ ] Testing & bug fixes
 
 ### Phase 6: Deployment
+
 - [ ] CI/CD pipeline
 - [ ] Environment setup
 - [ ] Monitoring & logging
@@ -490,18 +523,19 @@ interface Card {
 
 ### Decision Matrix
 
-| Aspect | Option 1 | Option 2 | Recommendation |
-|--------|----------|----------|----------------|
-| **Frontend** | React + TypeScript | Svelte | **React** (larger ecosystem, more resources) |
-| **Backend** | FastAPI | Flask | **FastAPI** (async, auto docs, modern) |
-| **Database** | PostgreSQL | Firebase | **PostgreSQL** (more control, scalable) |
-| **Hosting** | Vercel + Railway | All-in AWS | **Vercel + Railway** (easier, cheaper for MVP) |
-| **AI** | Rule-based | OpenAI API | **Both** (rule-based for MVP, OpenAI for premium) |
-| **State Mgmt** | Zustand | Redux Toolkit | **Zustand** (simpler, less boilerplate) |
+| Aspect         | Option 1           | Option 2      | Recommendation                                    |
+| -------------- | ------------------ | ------------- | ------------------------------------------------- |
+| **Frontend**   | React + TypeScript | Svelte        | **React** (larger ecosystem, more resources)      |
+| **Backend**    | FastAPI            | Flask         | **FastAPI** (async, auto docs, modern)            |
+| **Database**   | PostgreSQL         | Firebase      | **PostgreSQL** (more control, scalable)           |
+| **Hosting**    | Vercel + Railway   | All-in AWS    | **Vercel + Railway** (easier, cheaper for MVP)    |
+| **AI**         | Rule-based         | OpenAI API    | **Both** (rule-based for MVP, OpenAI for premium) |
+| **State Mgmt** | Zustand            | Redux Toolkit | **Zustand** (simpler, less boilerplate)           |
 
 ### MVP Tech Stack (Recommended)
 
 **Frontend:**
+
 - React + TypeScript
 - Vite (fast build tool)
 - Tailwind CSS
@@ -509,11 +543,13 @@ interface Card {
 - React Query (API calls)
 
 **Backend:**
+
 - FastAPI
 - SQLite (for MVP, migrate to PostgreSQL later)
 - Pydantic (validation)
 
 **Deployment:**
+
 - Vercel (frontend)
 - Railway (backend + database)
 
@@ -524,53 +560,66 @@ interface Card {
 ## Key Features Breakdown
 
 ### 1. Basic Strategy Advisor
+
 **What it does:**
+
 - Shows the mathematically optimal move
 - Displays strategy chart
 - Highlights correct action
 - Tracks accuracy
 
 **User Options:**
+
 - Toggle hints on/off
 - Show/hide strategy chart
 - Difficulty mode (no hints, hints only after mistake)
 
 ### 2. Card Counting Display
+
 **What it shows:**
+
 - Running count
 - True count
 - Decks remaining
 - Betting recommendation
 
 **Educational Features:**
+
 - Explain Hi-Lo system
 - Practice mode (count validation)
 - Count history graph
 
 ### 3. AI Assistant
+
 **Capabilities:**
+
 - "Why should I hit here?"
 - "Explain the running count"
 - "What mistakes did I make?"
 - "How do I improve?"
 
 **Implementation:**
+
 - Chat interface (sidebar or modal)
 - Contextual hints (pop-ups)
 - Post-game analysis
 
 ### 4. Learning Modes
+
 **Beginner Mode:**
+
 - Strategy hints always visible
 - Explain every decision
 - Slower pace
 
 **Practice Mode:**
+
 - Quiz mode (suggest action before showing)
 - Track accuracy
 - Replay hands
 
 **Expert Mode:**
+
 - No hints
 - Performance tracking
 - Speed mode
@@ -580,6 +629,7 @@ interface Card {
 ## Security Considerations
 
 ### Backend:
+
 - Input validation (Pydantic models)
 - Rate limiting (prevent API abuse)
 - CORS configuration
@@ -587,6 +637,7 @@ interface Card {
 - SQL injection prevention (use ORMs)
 
 ### Frontend:
+
 - XSS prevention (React handles most)
 - HTTPS only
 - Secure token storage (httpOnly cookies)
@@ -596,6 +647,7 @@ interface Card {
 ## Performance Considerations
 
 ### Frontend:
+
 - Lazy load components
 - Memoize expensive calculations
 - Virtual scrolling for history
@@ -603,6 +655,7 @@ interface Card {
 - Code splitting
 
 ### Backend:
+
 - Cache strategy lookups
 - Connection pooling
 - Async operations
@@ -614,11 +667,13 @@ interface Card {
 ## Testing Strategy
 
 ### Backend:
+
 - Unit tests (game logic, strategy)
 - Integration tests (API endpoints)
 - pytest framework
 
 ### Frontend:
+
 - Component tests (React Testing Library)
 - E2E tests (Playwright)
 - Visual regression tests
@@ -628,11 +683,13 @@ interface Card {
 ## Monitoring & Analytics
 
 ### Application Monitoring:
+
 - Error tracking (Sentry)
 - Performance monitoring (Vercel Analytics)
 - Uptime monitoring (UptimeRobot)
 
 ### User Analytics:
+
 - Game metrics (hands played, win rate)
 - Feature usage (strategy advisor usage, AI questions)
 - User flow (where do users drop off?)
@@ -642,6 +699,7 @@ interface Card {
 ## Future Enhancements
 
 ### V2 Features:
+
 - Multiplayer tables
 - Tournaments
 - Advanced counting systems (KO, Omega II)
@@ -652,6 +710,7 @@ interface Card {
 - Leaderboards
 
 ### Monetization Options (if desired):
+
 - Premium AI features
 - Advanced analytics
 - Ad-free experience
@@ -663,6 +722,7 @@ interface Card {
 ## Next Steps
 
 ### Immediate Actions:
+
 1. **Set up project structure** (mono-repo or separate repos)
 2. **Initialize both frontend & backend** with boilerplate
 3. **Implement core game engine** (Deck, Card, Hand classes)
@@ -671,6 +731,7 @@ interface Card {
 6. **Test end-to-end** (can you play a hand?)
 
 ### Week 1 Goals:
+
 - Working game engine
 - Basic API
 - Simple card UI
@@ -707,17 +768,20 @@ interface Card {
 ## Resources
 
 ### Learning Materials:
+
 - **BlackJack Strategy:** wizardofodds.com
 - **Card Counting:** blackjackapprenticeship.com
 - **Game Logic:** Python BlackJack tutorials
 - **React Patterns:** react.dev
 
 ### APIs & Services:
+
 - **OpenAI API:** openai.com/api
 - **Hosting:** vercel.com, railway.app
 - **Database:** supabase.com, planetscale.com
 
 ### Design Inspiration:
+
 - Existing BlackJack apps
 - Casino game UIs
 - Educational game platforms
@@ -734,13 +798,15 @@ interface Card {
 4. **Add AI:** Finally AI assistant (Phase 4)
 
 **Tech Stack:**
+
 - React + TypeScript + Tailwind (Frontend)
 - FastAPI + PostgreSQL (Backend)
 - Vercel + Railway (Hosting)
 
 **Timeline:** 8-12 weeks for full featured MVP
 
-**Philosophy:** 
+**Philosophy:**
+
 - Modularity is key (separate concerns)
 - API-first design (backend can work standalone)
 - Test as you go (don't accumulate tech debt)
